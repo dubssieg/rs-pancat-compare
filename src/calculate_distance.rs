@@ -1,6 +1,6 @@
 pub fn distance(path_name: &String, path_a: Vec<usize>, path_b: Vec<usize>) {
     /*
-    This function takes two paths and compares them to find the merge, split and equivalence points.
+    Takes two paths and compares them to find the merge, split and equivalence points.
      */
     if path_a.last() != path_b.last() {
         eprintln!("Both paths must have the same length.");
