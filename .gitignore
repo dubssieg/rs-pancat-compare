@@ -1,0 +1,4 @@
+/target
+*.gfa
+*.txt
+*.json
