@@ -33,6 +33,7 @@ fn main() {
         .filter(|key| node_lists_b.contains_key(*key))
         .collect();
     // Iterate on common_keys
+    println!("# Path name\tPosition\tOperation\tNodeA\tNodeB");
     for key in common_keys {
         let path_a_descriptor = compute_boundaries::compute_cumulative_sum(
             &node_lists_a.get(key).unwrap(),
@@ -42,6 +43,12 @@ fn main() {
             &node_lists_b.get(key).unwrap(),
             &seq_lengths_b,
         );
-        calculate_distance::distance(key, path_a_descriptor, path_b_descriptor);
+        calculate_distance::distance(
+            key,
+            path_a_descriptor,
+            path_b_descriptor,
+            &node_lists_a.get(key).unwrap(),
+            &node_lists_b.get(key).unwrap(),
+        );
     }
 }
