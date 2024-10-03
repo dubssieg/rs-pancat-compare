@@ -1,22 +1,16 @@
-mod compute_distance;
-mod index_gfa_file;
+mod calculate_distance;
+mod compute_boundaries;
+mod parse_gfa_file;
 use std::env;
 
 fn main() {
-    /*
-    Compare two GFA files and compute the distance between them
-    Two arguments must be given in the command line:
-    - The path to the first GFA file
-    - The path to the second GFA file
-    It will print to standard output the differences between the two graphs
-    */
     // Get the file path from command line arguments
     let args: Vec<String> = env::args().collect();
     let file_path_a = &args[1];
     let file_path_b = &args[2];
 
     // Parse first graph
-    let (seq_lengths_a, path_descriptors_a) = match index_gfa_file::index_gfa(file_path_a) {
+    let (seq_lengths_a, node_lists_a) = match parse_gfa_file::read_gfa_file(file_path_a) {
         Ok(result) => result,
         Err(error) => {
             eprintln!("Failed to read GFA file: {}", error);
@@ -25,7 +19,7 @@ fn main() {
     };
 
     // Parse second graph
-    let (seq_lengths_b, path_descriptors_b) = match index_gfa_file::index_gfa(file_path_b) {
+    let (seq_lengths_b, node_lists_b) = match parse_gfa_file::read_gfa_file(file_path_b) {
         Ok(result) => result,
         Err(error) => {
             eprintln!("Failed to read GFA file: {}", error);
@@ -33,14 +27,28 @@ fn main() {
         }
     };
 
-    // Compute the distance between the two graphs
-    compute_distance::distance(
-        file_path_a,
-        file_path_b,
-        seq_lengths_a,
-        seq_lengths_b,
-        path_descriptors_a,
-        path_descriptors_b,
-    )
-    .unwrap();
+    // Compute the intersection of node_list_a and node_list_b keys
+    let common_keys: Vec<&String> = node_lists_a
+        .keys()
+        .filter(|key| node_lists_b.contains_key(*key))
+        .collect();
+    // Iterate on common_keys
+    println!("# Path name\tPosition\tOperation\tNodeA\tNodeB");
+    for key in common_keys {
+        let path_a_descriptor = compute_boundaries::compute_cumulative_sum(
+            &node_lists_a.get(key).unwrap(),
+            &seq_lengths_a,
+        );
+        let path_b_descriptor = compute_boundaries::compute_cumulative_sum(
+            &node_lists_b.get(key).unwrap(),
+            &seq_lengths_b,
+        );
+        calculate_distance::distance(
+            key,
+            path_a_descriptor,
+            path_b_descriptor,
+            &node_lists_a.get(key).unwrap(),
+            &node_lists_b.get(key).unwrap(),
+        );
+    }
 }
