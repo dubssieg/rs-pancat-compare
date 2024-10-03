@@ -17,7 +17,13 @@ pub fn read_gfa_file(
             return Err(error);
         }
     };
-    let reader = io::BufReader::new(file);
+    let reader: Box<dyn BufRead> = if file_path.ends_with(".gz") {
+        let decoder = flate2::read::GzDecoder::new(file);
+        Box::new(io::BufReader::new(decoder))
+    } else {
+        Box::new(io::BufReader::new(file))
+    };
+
     let mut seq_lengths: HashMap<String, usize> = HashMap::new();
     let mut node_lists: HashMap<String, Vec<String>> = HashMap::new();
     for line in reader.lines() {
