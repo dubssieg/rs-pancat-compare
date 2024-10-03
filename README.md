@@ -7,5 +7,13 @@ Program that calculates the distance between two GFA (Graphical Fragment Assembl
 
 ![edition algorithm](https://github.com/dubssieg/dubssieg/blob/main/algorithm.gif)
 
+| Organism | Chromosom | Wall time | Memory |
+|----------|-----------|-----------|--------|
+| yeast    | 1         | 0.56s     | 3.0MB  |
+| human    | 21        | 5m08s     | 383MB  |
+| human    | 1         | 17m42s    | 1.2GB  |
+
+Timings and peak memory usage over diverse datasets. Jobs executed on a single core of a 13th Gen Intel® Core™ i7-1365U @ 3.6GHz.
+
 > [!NOTE]\
 > Want to contribute? Feel free to open a PR on an issue about a missing, buggy or incomplete feature! **Please do bug reports in the issue tracker!**.
