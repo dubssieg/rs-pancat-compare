@@ -28,7 +28,7 @@ pub fn index_gfa(
         if let Some(first_char) = line.chars().next() {
             if first_char == 'S' {
                 // In the case of an S-line, we store the node name and the sequence length
-                let node_name = String::from(columns[1].trim());
+                let node_name = String::from(columns[1]);
                 let sequence_length = columns[2].trim().len();
                 seq_lengths.insert(node_name, sequence_length);
             }
@@ -45,6 +45,7 @@ pub fn index_gfa(
                 // let path_length = columns[2].split(',').count();
 
                 let node_list: Vec<String> = columns[2]
+                    .trim()
                     .split(',')
                     .map(|s| s[..s.len() - 1].to_string())
                     .collect();
