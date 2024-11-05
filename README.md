@@ -36,3 +36,28 @@ Timings and peak memory usage over diverse datasets. Jobs executed on a single c
 
 > [!NOTE]\
 > Want to contribute? Feel free to open a PR on an issue about a missing, buggy or incomplete feature! **Please do bug reports in the issue tracker!**.
+
+## Output
+
+Program outputs to `stdout` in a `.tsv` format editions as well as informations about the comparison.
+
+```
+# Intersection of paths: [pathname:str,+]
+## pathname:str	pathlength:int
+# Path name	Position	Operation	NodeA	NodeB	BreakpointA	BreakpointB
+pathname:str	[0-9]+:int	[M|S]:str	[0-9]+:str	[0-9]+:str	[0-9]+:int	[0-9]+:int
+...
+# Distance: [0-9]+:int (E=[0-9]+:int, S=[0-9]+:int, M=[0-9]+:int).
+
+```
+
+Output features:
++ Lines starting with '#' are comments or information about the comparison
++ Lines starting with '##' are haplotypes length information
++ Every other line is either a merge (M) or a split (S)
++ Equivalences are accounted in the final line but not written as output (too many in file)
++ Distance is the sum of merges and splits
++ `Path name` is the haplotype name string
++ `Position` is the global position on the graph the edit takes place
++ `NodeA` (resp. `NodeB`) is the node on pathA (resp. pathB) where the edition occurs
++ `BreakpointA` (resp. `BreakpointB`) is the next breakpoint position on pathA (resp. pathB)
