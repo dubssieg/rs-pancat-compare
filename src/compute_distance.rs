@@ -32,6 +32,11 @@ pub fn distance(
 
     println!("# Intersection of paths: {:?}", intersection);
 
+    // Print the length of every path in the intersection
+    for path_name in intersection.iter() {
+        println!("## {}\t{}", path_name, path_lengths1[path_name.as_str()]);
+    }
+
     let mut equivalences_count = 0;
     let mut merges_count = 0;
     let mut splits_count = 0;
