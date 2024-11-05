@@ -1,5 +1,5 @@
 [package]
-name = "rs-gfa-parser"
+name = "rs-pancat-compare"
 version = "0.1.0"
 edition = "2021"
 
