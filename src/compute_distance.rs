@@ -48,28 +48,28 @@ pub fn distance(
         let pos2 = path_positions2[path_name];
 
         // We open the two files
-        let mut file1 = BufReader::new(File::open(file_path1)?);
-        let mut file2 = BufReader::new(File::open(file_path2)?);
+        let mut file1: BufReader<File> = BufReader::new(File::open(file_path1)?);
+        let mut file2: BufReader<File> = BufReader::new(File::open(file_path2)?);
 
         // We seek to the position of the path in the two files
         file1.seek(SeekFrom::Start(pos1))?;
         file2.seek(SeekFrom::Start(pos2))?;
 
         // Buffer to read the two files
-        let mut buffer1 = [0; 1];
-        let mut buffer2 = [0; 1];
+        let mut buffer1: [u8; 1] = [0; 1];
+        let mut buffer2: [u8; 1] = [0; 1];
 
         // Node names
-        let mut node1 = String::new();
-        let mut node2 = String::new();
+        let mut node1: String = String::new();
+        let mut node2: String = String::new();
 
-        let mut breakpoint_a = 0;
-        let mut breakpoint_b = 0;
+        let mut breakpoint_a: usize = 0;
+        let mut breakpoint_b: usize = 0;
 
-        let mut position = 0;
+        let mut position: usize = 0;
 
-        let max_length1 = path_lengths1[path_name.as_str()] as usize;
-        let max_length2 = path_lengths2[path_name.as_str()] as usize;
+        let max_length1: usize = path_lengths1[path_name.as_str()] as usize;
+        let max_length2: usize = path_lengths2[path_name.as_str()] as usize;
 
         if max_length1 != max_length2 {
             // The two paths have different lengths, we cannot compare them
