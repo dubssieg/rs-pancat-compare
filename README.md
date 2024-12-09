@@ -7,9 +7,9 @@ Program that calculates the distance between two GFA (Graphical Fragment Assembl
 
 ## Install instructions:
 
-Find the latest pre-compiled binaries [in the release page here](https://github.com/dubssieg/rs-pancat-compare/releases).
+(For Linux-based systems only) Find the latest pre-compiled binaries [in the release page here](https://github.com/dubssieg/rs-pancat-compare/releases).
 
-Build from source: requires rust and cargo.
+(For anyone) Build from source: requires rust and cargo.
 
 ```bash
 git clone 
@@ -19,11 +19,31 @@ cargo build --release
 
 ## Usage
 
+:warning: Only accept P-lines as paths in GFA files - please convert your GFA1.1 files to GFA1.0 with the vg toolkit for instance. 
+
 ```bash
-./target/release/rs-pancat-compare graph_A.gfa graph_B.gfa > output.tsv
+./target/release/rs-pancat-compare example/graph_A.gfa example/graph_B.gfa > output.tsv
 ```
 
-:warning: Only accept P-lines as paths in GFA files - please convert your GFA1.1 files to GFA1.0 with vg for instance. 
+On included graphs (in `example/` folder), you should obtain this output:
+
+```bash
+# Intersection of paths: ["CASBJH01", ... "CASBJS01"]
+## CASBJH01     219308
+...
+## CASBJS01     206475
+# Path name     Position        Operation       NodeA   NodeB   BreakpointA     BreakpointB
+CASBJH01        20      S       15707   21230   20      7565
+CASBJH01        21      S       15706   21230   21      7565
+CASBJH01        23      S       15704   21230   23      7565
+...
+CASBJU01        222414  M       21721   23661   222416  222414
+CASBJU01        222416  S       21721   23662   222416  222417
+CASBJU01        222418  S       21723   23663   222418  222419
+# Distance: 34203 (E=208247, S=21435, M=12768).
+```
+
+The order of the graphs is used to qualify editions. It is computed as "the minimal set of required operations to obtain the graph B out of the graph A".
 
 
 | Organism | Chromosom | Wall time | Memory |
