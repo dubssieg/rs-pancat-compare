@@ -20,7 +20,7 @@ cargo build --release
 ## Usage
 
 ```bash
-./target/debug/rs-pancat-compare graph_A.gfa graph_B.gfa > output.tsv
+./target/release/rs-pancat-compare graph_A.gfa graph_B.gfa > output.tsv
 ```
 
 :warning: Only accept P-lines as paths in GFA files - please convert your GFA1.1 files to GFA1.0 with vg for instance. 
