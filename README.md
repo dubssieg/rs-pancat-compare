@@ -1,7 +1,5 @@
 # Pairwise edit distance between pangenome graphs
 
-> [!NOTE]\
->  [pancat compare](https://github.com/Tharos-ux/pancat) is a tool, originally written in Python, designed to compute a distance between pangenome graphs made from a same group of genomes. For performance, it has been reimplemented in Rust.
 
 Program that calculates the distance between two GFA (Graphical Fragment Assembly) files. It takes in the file paths of the two GFA files. The program first identifies the common paths between the two graphs by finding the intersection of their path names. For each common path, the program reads those and output differences in segmentation in-between them. The purpose is to output the necessary operations (merges and splits) required to transform the graph represented by the first GFA file into the graph represented by the second GFA file.
 
@@ -9,12 +7,14 @@ Program that calculates the distance between two GFA (Graphical Fragment Assembl
 
 ## Install instructions:
 
-Requires rust and cargo.
+Find the latest pre-compiled binaries [in the release page here](https://github.com/dubssieg/rs-pancat-compare/releases).
+
+Build from source: requires rust and cargo.
 
 ```bash
 git clone 
 cd rs-pancat-compare
-cargo build
+cargo build --release
 ```
 
 ## Usage
@@ -61,3 +61,10 @@ Output features:
 + `Position` is the global position on the graph the edit takes place
 + `NodeA` (resp. `NodeB`) is the node on pathA (resp. pathB) where the edition occurs
 + `BreakpointA` (resp. `BreakpointB`) is the next breakpoint position on pathA (resp. pathB)
+
+## Test datasets
+
+You can find datasets used for the paper [on Zenodo](https://zenodo.org/records/10932490) and instructions on how to use [on the dedicated repository](https://github.com/dubssieg/pancat_paper).
+
+> [!NOTE]\
+>  [pancat compare](https://github.com/Tharos-ux/pancat) is a tool, originally written in Python, designed to compute a distance between pangenome graphs made from a same group of genomes. For performance, it has been reimplemented in Rust.
