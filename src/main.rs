@@ -1,5 +1,7 @@
 mod compute_distance;
 mod index_gfa_file;
+use std::process::exit;
+
 use clap::Parser;
 
 #[derive(Parser, Debug)]
@@ -35,6 +37,11 @@ fn main() {
                 return;
             }
         };
+    // If path_descriptors_a is empty, the GFA file is not in GFA1.0 format
+    if path_descriptors_a.is_empty() {
+        eprintln!("Error: No paths found in graph.");
+        std::process::exit(1);
+    }
 
     // Parse second graph
     let (seq_lengths_b, path_descriptors_b, path_lengths_b) =
@@ -45,6 +52,12 @@ fn main() {
                 return;
             }
         };
+
+    // If path_descriptors_b is empty, the GFA file is not in GFA1.0 format
+    if path_descriptors_b.is_empty() {
+        eprintln!("Error: No paths found in graph.");
+        std::process::exit(1);
+    }
 
     // Compute the distance between the two graphs
     compute_distance::distance(
