@@ -1,6 +1,5 @@
 mod compute_distance;
 mod index_gfa_file;
-use std::process::exit;
 
 use clap::Parser;
 
