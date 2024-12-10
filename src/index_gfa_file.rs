@@ -32,6 +32,13 @@ pub fn index_gfa(
                 let sequence_length = columns[2].trim().len();
                 seq_lengths.insert(node_name, sequence_length);
             }
+            if first_char == 'W' {
+                // In the case of a W-line, we consider this is not implemented yet
+                // We can add the code to handle the W-lines here
+                // For now we exit the program with an error message
+                eprintln!("Error: W-lines support not implemented yet. Please convert your graph to GFA1.0");
+                std::process::exit(1);
+            }
             if first_char == 'P' {
                 let mut path_length = 0;
                 // In the case of a P-line, we store the path name and the offset of the path description
