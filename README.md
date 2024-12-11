@@ -88,3 +88,27 @@ You can find datasets used for the paper [on Zenodo](https://zenodo.org/records/
 
 > [!NOTE]\
 >  [pancat compare](https://github.com/Tharos-ux/pancat) is a tool, originally written in Python, designed to compute a distance between pangenome graphs made from a same group of genomes. For performance, it has been reimplemented in Rust.
+
+
+## Citing
+
+ Pairwise graph edit distance characterizes the impact of the construction method on pangenome graphs
+Siegfried Dubois, Claire Lemaitre, Matthias Zytnicki, Thomas Faraut
+bioRxiv 2024.12.06.627166; doi: [https://doi.org/10.1101/2024.12.06.627166](https://doi.org/10.1101/2024.12.06.627166)
+
+### Bibtex:
+
+```
+@article {dubois_distance_2024,
+	author = {Dubois, Siegfried and Lemaitre, Claire and Zytnicki, Matthias and Faraut, Thomas},
+	title = {Pairwise graph edit distance characterizes the impact of the construction method on pangenome graphs},
+	elocation-id = {2024.12.06.627166},
+	year = {2024},
+	doi = {10.1101/2024.12.06.627166},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {Pangenome variation graphs are an increasingly used tool to perform genome analysis, aiming to replace a linear reference in a wide variety of genomic analyses. The construction of a variation graph from a collection of chromosome-size genome sequences is a difficult task that is generally addressed using a number of heuristics. The question that arises is to what extent the construction method influences the resulting graph, and the characterization of variability. We aim to characterize the differences between variation graphs derived from the same set of genomes with a metric which expresses and pinpoint differences. We designed a pairwise variation graph comparison algorithm, which establishes an edit distance between variation graphs, threading the genomes through both graphs. We applied our method to pangenome graphs built from yeast and human chromosome collections, and demonstrate that our method effectively characterizes discordances between pangenome graph construction methods and scales to real datasets.Competing Interest StatementThe authors have declared no competing interest.},
+	URL = {https://www.biorxiv.org/content/early/2024/12/10/2024.12.06.627166},
+	eprint = {https://www.biorxiv.org/content/early/2024/12/10/2024.12.06.627166.full.pdf},
+	journal = {bioRxiv}
+}
+```
