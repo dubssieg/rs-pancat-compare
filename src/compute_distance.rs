@@ -12,6 +12,8 @@ pub fn distance(
     path_positions2: HashMap<String, u64>,
     path_lengths1: HashMap<String, u64>,
     path_lengths2: HashMap<String, u64>,
+    mut spurious_breakpoints1: Vec<String>,
+    mut spurious_breakpoints2: Vec<String>,
 ) -> io::Result<()> {
     /*
     Given two GFA files and their associated node sizes and path positions, this function computes the distance between the two graphs.
@@ -37,15 +39,16 @@ pub fn distance(
         println!("## {}\t{}", path_name, path_lengths1[path_name.as_str()]);
     }
 
-    let mut equivalences_count = 0;
-    let mut merges_count = 0;
-    let mut splits_count = 0;
+    let mut equivalences_count: i32 = 0;
+    let mut merges_count: i32 = 0;
+    let mut splits_count: i32 = 0;
+    let mut spurious_count: i32 = 0;
 
     println!("# Path name\tPosition\tOperation\tNodeA\tNodeB\tBreakpointA\tBreakpointB");
     for path_name in intersection {
         // We get the positions of the path in the two files
-        let pos1 = path_positions1[path_name];
-        let pos2 = path_positions2[path_name];
+        let pos1: u64 = path_positions1[path_name];
+        let pos2: u64 = path_positions2[path_name];
 
         // We open the two files
         let mut file1: BufReader<File> = BufReader::new(File::open(file_path1)?);
@@ -95,10 +98,16 @@ pub fn distance(
                     // It is a split operation
                     splits_count += 1;
                     // The two positions in the two paths are not aligned
-                    println!(
-                        "{}\t{}\tS\t{}\t{}\t{}\t{}",
-                        path_name, position, node1, node2, breakpoint_a, breakpoint_b
-                    );
+                    if spurious_breakpoints2.contains(&node2) {
+                        // Remove the spurious breakpoint from the vector
+                        spurious_breakpoints2.retain(|x| x != &node2);
+                        spurious_count += 1;
+                    } else {
+                        println!(
+                            "{}\t{}\tS\t{}\t{}\t{}\t{}",
+                            path_name, position, node1, node2, breakpoint_a, breakpoint_b
+                        );
+                    }
                     node1 = read_next_node(&mut file1, &mut buffer1);
                     breakpoint_a += node_sizes1.get(&node1).unwrap().clone();
                 } else if breakpoint_a > breakpoint_b {
@@ -106,10 +115,16 @@ pub fn distance(
                     // It is a merge operation
                     merges_count += 1;
                     // The two positions in the two paths are not aligned
-                    println!(
-                        "{}\t{}\tM\t{}\t{}\t{}\t{}",
-                        path_name, position, node1, node2, breakpoint_a, breakpoint_b
-                    );
+                    if spurious_breakpoints1.contains(&node1) {
+                        // Remove the spurious breakpoint from the vector
+                        spurious_breakpoints1.retain(|x| x != &node1);
+                        spurious_count += 1;
+                    } else {
+                        println!(
+                            "{}\t{}\tM\t{}\t{}\t{}\t{}",
+                            path_name, position, node1, node2, breakpoint_a, breakpoint_b
+                        );
+                    }
                     node2 = read_next_node(&mut file2, &mut buffer2);
                     breakpoint_b += node_sizes2.get(&node2).unwrap().clone();
                 }
@@ -120,11 +135,12 @@ pub fn distance(
         }
     }
     println!(
-        "# Distance: {} (E={}, S={}, M={}).",
+        "# Distance: {} (E={}, S={}, M={}, SP={}).",
         splits_count + merges_count,
         equivalences_count,
         splits_count,
-        merges_count
+        merges_count,
+        spurious_count
     );
     Ok(())
 }

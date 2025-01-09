@@ -1,11 +1,12 @@
 mod compute_distance;
+mod evaluate_spuriousness;
 mod index_gfa_file;
 
 use clap::Parser;
 
 #[derive(Parser, Debug)]
 #[command(
-    version = "v0.1.2",
+    version = "v0.1.3",
     about = "GFA graph comparison tool",
     long_about = "Compares pangenome graphs by calculating the segmentation distance between two GFA (Graphical Fragment Assembly) files."
 )]
@@ -14,6 +15,9 @@ struct Cli {
     file_path_a: String,
     /// The path to the second GFA file
     file_path_b: String,
+    /// Checks for spurious breakpoints in graphs
+    #[clap(long = "spurious", short = 's', action)]
+    spurious: bool,
 }
 
 fn main() {
@@ -58,6 +62,22 @@ fn main() {
         std::process::exit(1);
     }
 
+    let spurious_nodes_a: Vec<String>;
+    let spurious_nodes_b: Vec<String>;
+
+    if args.spurious {
+        // Check for spurious breakpoints in the first graph
+        spurious_nodes_a = evaluate_spuriousness::spurious_breakpoints(&args.file_path_a).unwrap();
+
+        // Check for spurious breakpoints in the second graph
+        spurious_nodes_b = evaluate_spuriousness::spurious_breakpoints(&args.file_path_b).unwrap();
+    } else {
+        // If the spurious option is not given, do not check for spurious breakpoints
+        // Init empty vectors
+        spurious_nodes_a = Vec::new();
+        spurious_nodes_b = Vec::new();
+    }
+
     // Compute the distance between the two graphs
     compute_distance::distance(
         &args.file_path_a,
@@ -68,6 +88,8 @@ fn main() {
         path_descriptors_b,
         path_lengths_a,
         path_lengths_b,
+        spurious_nodes_a,
+        spurious_nodes_b,
     )
     .unwrap();
 }
