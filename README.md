@@ -17,12 +17,12 @@ cd rs-pancat-compare
 cargo build --release
 ```
 
-## Usage
+## Basic usage
 
 :warning: Only accept P-lines as paths in GFA files - please convert your GFA1.1 files to GFA1.0 with the vg toolkit for instance. 
 
 ```bash
-./target/release/rs-pancat-compare example/graph_A.gfa example/graph_B.gfa > output.tsv
+rs-pancat-compare example/graph_A.gfa example/graph_B.gfa > output.tsv
 ```
 
 On included graphs (in `example/` folder), you should obtain this output:
@@ -45,6 +45,15 @@ CASBJU01        222418  S       21723   23663   222418  222419
 
 The order of the graphs is used to qualify editions. It is computed as "the minimal set of required operations to obtain the graph B out of the graph A".
 
+## Filter spurious breakpoints
+
+```bash
+rs-pancat-compare example/graph_A.gfa example/graph_B.gfa -s > output.tsv
+```
+
+The `-s/--spurious` flag tells to search for spurious breakpoints and to discard them. Spurious breakpoints are segmentations in a genome that does not creates different paths. It corresponds to breakpoints that could be removed without changing any meaning of the graph.
+
+## Timings and memory
 
 | Organism | Chromosom | Wall time | Memory |
 |----------|-----------|-----------|--------|
