@@ -95,14 +95,14 @@ pub fn distance(
                     breakpoint_b += node_sizes2.get(&node2).unwrap().clone();
                 } else if breakpoint_a < breakpoint_b {
                     // The node in the first path is missing in the second path
-                    // It is a split operation
-                    splits_count += 1;
                     // The two positions in the two paths are not aligned
                     if spurious_breakpoints2.contains(&node2) {
                         // Remove the spurious breakpoint from the vector
                         spurious_breakpoints2.retain(|x| x != &node2);
                         spurious_count += 1;
                     } else {
+                        // It is a split operation
+                        splits_count += 1;
                         println!(
                             "{}\t{}\tS\t{}\t{}\t{}\t{}",
                             path_name, position, node1, node2, breakpoint_a, breakpoint_b
@@ -112,14 +112,14 @@ pub fn distance(
                     breakpoint_a += node_sizes1.get(&node1).unwrap().clone();
                 } else if breakpoint_a > breakpoint_b {
                     // The node in the second path is missing in the first path
-                    // It is a merge operation
-                    merges_count += 1;
                     // The two positions in the two paths are not aligned
                     if spurious_breakpoints1.contains(&node1) {
                         // Remove the spurious breakpoint from the vector
                         spurious_breakpoints1.retain(|x| x != &node1);
                         spurious_count += 1;
                     } else {
+                        // It is a merge operation
+                        merges_count += 1;
                         println!(
                             "{}\t{}\tM\t{}\t{}\t{}\t{}",
                             path_name, position, node1, node2, breakpoint_a, breakpoint_b
