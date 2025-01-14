@@ -26,10 +26,18 @@ pub fn spurious_breakpoints(file_path: &str) -> io::Result<Vec<String>> {
                 let successor: String = String::from(columns[3]);
 
                 if seq_successors.contains_key(&successor) {
-                    seq_successors
+                    if seq_successors
                         .get_mut(&successor)
                         .unwrap()
-                        .push(successor.clone());
+                        .contains(&successor)
+                    {
+                        continue;
+                    } else {
+                        seq_successors
+                            .get_mut(&successor)
+                            .unwrap()
+                            .push(successor.clone());
+                    }
                 } else {
                     seq_successors.insert(successor.clone(), vec![successor.clone()]);
                 }
