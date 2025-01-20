@@ -12,8 +12,8 @@ pub fn distance(
     path_positions2: HashMap<String, u64>,
     path_lengths1: HashMap<String, u64>,
     path_lengths2: HashMap<String, u64>,
-    mut spurious_breakpoints1: Vec<String>,
-    mut spurious_breakpoints2: Vec<String>,
+    spurious_breakpoints1: Vec<String>,
+    spurious_breakpoints2: Vec<String>,
 ) -> io::Result<()> {
     /*
     Given two GFA files and their associated node sizes and path positions, this function computes the distance between the two graphs.
@@ -43,6 +43,10 @@ pub fn distance(
     let mut merges_count: i32 = 0;
     let mut splits_count: i32 = 0;
     let mut spurious_count: i32 = 0;
+
+    // We need to duplicate the spurius vectors to keep the original ones
+    let mut sp1: Vec<String> = spurious_breakpoints1.clone();
+    let mut sp2: Vec<String> = spurious_breakpoints2.clone();
 
     println!("# Path name\tPosition\tOperation\tNodeA\tNodeB\tBreakpointA\tBreakpointB");
     for path_name in intersection {
@@ -96,9 +100,9 @@ pub fn distance(
                 } else if breakpoint_a < breakpoint_b {
                     // The node in the first path is missing in the second path
                     // The two positions in the two paths are not aligned
-                    if spurious_breakpoints2.contains(&node2) {
+                    if sp2.contains(&node2) {
                         // Remove the spurious breakpoint from the vector
-                        spurious_breakpoints2.retain(|x| x != &node2);
+                        sp2.retain(|x| x != &node2);
                         spurious_count += 1;
                     } else {
                         // It is a split operation
@@ -113,9 +117,9 @@ pub fn distance(
                 } else if breakpoint_a > breakpoint_b {
                     // The node in the second path is missing in the first path
                     // The two positions in the two paths are not aligned
-                    if spurious_breakpoints1.contains(&node1) {
+                    if sp1.contains(&node1) {
                         // Remove the spurious breakpoint from the vector
-                        spurious_breakpoints1.retain(|x| x != &node1);
+                        sp1.retain(|x| x != &node1);
                         spurious_count += 1;
                     } else {
                         // It is a merge operation
