@@ -12,11 +12,15 @@ pub fn distance(
     path_positions2: HashMap<String, u64>,
     path_lengths1: HashMap<String, u64>,
     path_lengths2: HashMap<String, u64>,
+    path_types1: HashMap<String, char>,
+    path_types2: HashMap<String, char>,
     spurious_breakpoints1: Vec<String>,
     spurious_breakpoints2: Vec<String>,
 ) -> io::Result<()> {
     /*
     Given two GFA files and their associated node sizes and path positions, this function computes the distance between the two graphs.
+
+    Arguments:
     - file_path1: the path to the first GFA file
     - file_path2: the path to the second GFA file
     - node_sizes1: a HashMap with the node names as keys and the node sizes as values for the first GFA file
@@ -25,7 +29,13 @@ pub fn distance(
     - path_positions2: a HashMap with the path names as keys and the offset of the path description for the second GFA file
     - path_lengths1: a HashMap with the path names as keys and the number of nodes in the path for the first GFA file
     - path_lengths2: a HashMap with the path names as keys and the number of nodes in the path for the second GFA file
-    Writes to standard output the operations (merges and splits) needed to transform the first graph into the second graph
+    - path_types1: a HashMap with the path names as keys and the path types (W or P) as values for the first GFA file
+    - path_types2: a HashMap with the path names as keys and the path types (W or P) as values for the second GFA file
+    - spurious_breakpoints1: a vector of spurious node IDs for the first GFA file
+    - spurious_breakpoints2: a vector of spurious node IDs for the second GFA file
+
+    Ouptut:
+    - Writes to standard output the operations (merges and splits) needed to transform the first graph into the second graph
     */
     let intersection: Vec<&String> = path_positions1
         .keys()
@@ -78,6 +88,10 @@ pub fn distance(
         let max_length1: usize = path_lengths1[path_name.as_str()] as usize;
         let max_length2: usize = path_lengths2[path_name.as_str()] as usize;
 
+        if path_types1[path_name.as_str()] == 'W' {
+            // It is a W-line, we need the read_next_w_node function
+        }
+
         if max_length1 != max_length2 {
             // The two paths have different lengths, we cannot compare them
             println!(
@@ -92,8 +106,16 @@ pub fn distance(
                     equivalences_count += 1;
                     // No edition operation is needed
                     // We must read the two next nodes in the two files
-                    node1 = read_next_node(&mut file1, &mut buffer1);
-                    node2 = read_next_node(&mut file2, &mut buffer2);
+                    node1 = if path_types1[path_name.as_str()] == 'P' {
+                        read_next_p_node(&mut file1, &mut buffer1)
+                    } else {
+                        read_next_w_node(&mut file1, &mut buffer1)
+                    };
+                    node2 = if path_types2[path_name.as_str()] == 'P' {
+                        read_next_p_node(&mut file2, &mut buffer2)
+                    } else {
+                        read_next_w_node(&mut file2, &mut buffer2)
+                    };
                     // Store their associated sizes in breakpoint_a and breakpoint_b
                     breakpoint_a += node_sizes1.get(&node1).unwrap().clone();
                     breakpoint_b += node_sizes2.get(&node2).unwrap().clone();
@@ -112,7 +134,11 @@ pub fn distance(
                             path_name, position, node1, node2, breakpoint_a, breakpoint_b
                         );
                     }
-                    node1 = read_next_node(&mut file1, &mut buffer1);
+                    node1 = if path_types1[path_name.as_str()] == 'P' {
+                        read_next_p_node(&mut file1, &mut buffer1)
+                    } else {
+                        read_next_w_node(&mut file1, &mut buffer1)
+                    };
                     breakpoint_a += node_sizes1.get(&node1).unwrap().clone();
                 } else if breakpoint_a > breakpoint_b {
                     // The node in the second path is missing in the first path
@@ -129,7 +155,11 @@ pub fn distance(
                             path_name, position, node1, node2, breakpoint_a, breakpoint_b
                         );
                     }
-                    node2 = read_next_node(&mut file2, &mut buffer2);
+                    node2 = if path_types2[path_name.as_str()] == 'P' {
+                        read_next_p_node(&mut file2, &mut buffer2)
+                    } else {
+                        read_next_w_node(&mut file2, &mut buffer2)
+                    };
                     breakpoint_b += node_sizes2.get(&node2).unwrap().clone();
                 }
 
@@ -149,10 +179,9 @@ pub fn distance(
     Ok(())
 }
 
-fn read_next_node(file: &mut BufReader<File>, buffer: &mut [u8; 1]) -> String {
+fn read_next_p_node(file: &mut BufReader<File>, buffer: &mut [u8; 1]) -> String {
     /*
-     * Read the next node in the file, until a comma or a newline is found
-     * Return the node name and a boolean indicating if the end of the line has been reached
+     * Read the next node in the file, until a comma is found
      * file: the file to read
      * buffer: a buffer to read the file
      */
@@ -162,6 +191,23 @@ fn read_next_node(file: &mut BufReader<File>, buffer: &mut [u8; 1]) -> String {
             break;
         }
         if buffer[0] != b',' {
+            node.push(buffer[0] as char);
+        }
+    }
+    node
+}
+
+fn read_next_w_node(file: &mut BufReader<File>, buffer: &mut [u8; 1]) -> String {
+    /*
+     * Read the next node in the file, until a > or < is found
+     * file: the file to read
+     * buffer: a buffer to read the file
+     */
+    let mut node = String::new();
+    while file.read(buffer).unwrap() > 0 {
+        if buffer[0] == b'>' || buffer[0] == b'<' || buffer[0] == b'\t' {
+            break;
+        } else {
             node.push(buffer[0] as char);
         }
     }

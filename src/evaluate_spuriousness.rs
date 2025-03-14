@@ -10,7 +10,12 @@ use std::io::{self, BufRead, BufReader};
 
 pub fn spurious_breakpoints(file_path: &str) -> io::Result<Vec<String>> {
     /*
-    Given a file path, this function reads the GFA file and returns a HashMap:
+    Computes spurious breakpoints in the graph
+
+    Arguments:
+    - file_path: a string with the path to the GFA file
+
+    Returns:
     - spurious_nodes: a vector of spurious node IDs as values
     */
     let file: File = File::open(file_path)?;
@@ -44,7 +49,17 @@ fn filter_spurious(
     seq_predecessors: HashMap<String, Vec<String>>,
     seq_successors: HashMap<String, Vec<String>>,
 ) -> Vec<String> {
-    // We then search for predecessors nodes that have only one successor and where the sole successor is the predecessor
+    /*
+    Filters spurious breakpoints from the predecessors and successors HashMaps
+    A spurious breakpoint is a position where the node before has a single outgoing edge and the node after has a single incoming edge
+
+    Arguments:
+    - seq_predecessors: a HashMap with the node names as keys and the predecessors as values
+    - seq_successors: a HashMap with the node names as keys and the successors as values
+
+    Returns:
+    - spurious_nodes: a vector of spurious node IDs
+     */
     let mut spurious_nodes: Vec<String> = Vec::new();
     for (node, successors) in seq_successors.iter() {
         if successors.len() == 1 {
@@ -62,6 +77,14 @@ fn filter_spurious(
 }
 
 fn add_relation(links: &mut HashMap<String, Vec<String>>, value: String, key: String) {
+    /*
+    Function to add a relation between two nodes in a HashMap
+
+    Arguments:
+    - links: a mutable reference to a HashMap
+    - value: the value of the relation
+    - key: the key of the relation
+     */
     if links.contains_key(&key) {
         if links.get_mut(&key).unwrap().contains(&value) {
             return;
