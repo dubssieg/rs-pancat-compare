@@ -1,13 +1,13 @@
 # Pairwise edit distance between pangenome graphs
 
 
-Program that calculates the distance between two GFA (Graphical Fragment Assembly) files. It takes in the file paths of the two GFA files. The program first identifies the common paths between the two graphs by finding the intersection of their path names. For each common path, the program reads those and output differences in segmentation in-between them. The purpose is to output the necessary operations (merges and splits) required to transform the graph represented by the first GFA file into the graph represented by the second GFA file.
+Program that calculates the distance between two pangenome graphs in GFA (Graphical Fragment Assembly) format. It takes in the file paths of the two GFA files. The program first identifies the common paths between the two graphs by finding the intersection of their path names. For each common path, the program reads those and output differences in segmentation in-between them. The purpose is to output the necessary operations (merges and splits) required to transform the graph represented by the first GFA file into the graph represented by the second GFA file.
 
 ![edition algorithm](https://github.com/dubssieg/dubssieg/blob/main/algorithm.gif)
 
 ## Install instructions:
 
-(For Linux-based systems only) Find the latest pre-compiled binaries [in the release page here](https://github.com/dubssieg/rs-pancat-compare/releases).
+(For Linux-based systems only) Find the latest stable pre-compiled binaries [in the release page here](https://github.com/dubssieg/rs-pancat-compare/releases).
 
 (For anyone) Build from source: requires rust and cargo.
 
@@ -19,7 +19,7 @@ cargo build --release
 
 ## Basic usage
 
-:warning: Only accept P-lines as paths in GFA files - please convert your GFA1.1 files to GFA1.0 with the vg toolkit for instance. 
+:warning: This program is intended to be used on **sequence graphs** and does not take into account overlaps.
 
 ```bash
 rs-pancat-compare example/graph_A.gfa example/graph_B.gfa > output.tsv
@@ -96,28 +96,29 @@ Output features:
 You can find datasets used for the paper [on Zenodo](https://zenodo.org/records/10932490) and instructions on how to use [on the dedicated repository](https://github.com/dubssieg/pancat_paper).
 
 > [!NOTE]\
->  [pancat compare](https://github.com/Tharos-ux/pancat) is a tool, originally written in Python, designed to compute a distance between pangenome graphs made from a same group of genomes. For performance, it has been reimplemented in Rust.
+>  [pancat compare](https://github.com/dubssieg/pancat) is a tool, originally written in Python, designed to compute a distance between pangenome graphs made from a same group of genomes. For performance, it has been reimplemented in Rust.
 
 
 ## Citing
 
- Pairwise graph edit distance characterizes the impact of the construction method on pangenome graphs
+Pairwise graph edit distance characterizes the impact of the construction method on pangenome graphs
 Siegfried Dubois, Claire Lemaitre, Matthias Zytnicki, Thomas Faraut
-bioRxiv 2024.12.06.627166; doi: [https://doi.org/10.1101/2024.12.06.627166](https://doi.org/10.1101/2024.12.06.627166)
+Bioinformatics 2025.05.08; doi: [https://doi.org/10.1093/bioinformatics/btaf291](https://doi.org/10.1093/bioinformatics/btaf291)
 
 ### Bibtex:
 
 ```
-@article {dubois_distance_2024,
-	author = {Dubois, Siegfried and Lemaitre, Claire and Zytnicki, Matthias and Faraut, Thomas},
+@article{dubois_pairwise_2025,
 	title = {Pairwise graph edit distance characterizes the impact of the construction method on pangenome graphs},
-	elocation-id = {2024.12.06.627166},
-	year = {2024},
-	doi = {10.1101/2024.12.06.627166},
-	publisher = {Cold Spring Harbor Laboratory},
-	abstract = {Pangenome variation graphs are an increasingly used tool to perform genome analysis, aiming to replace a linear reference in a wide variety of genomic analyses. The construction of a variation graph from a collection of chromosome-size genome sequences is a difficult task that is generally addressed using a number of heuristics. The question that arises is to what extent the construction method influences the resulting graph, and the characterization of variability. We aim to characterize the differences between variation graphs derived from the same set of genomes with a metric which expresses and pinpoint differences. We designed a pairwise variation graph comparison algorithm, which establishes an edit distance between variation graphs, threading the genomes through both graphs. We applied our method to pangenome graphs built from yeast and human chromosome collections, and demonstrate that our method effectively characterizes discordances between pangenome graph construction methods and scales to real datasets.Competing Interest StatementThe authors have declared no competing interest.},
-	URL = {https://www.biorxiv.org/content/early/2024/12/10/2024.12.06.627166},
-	eprint = {https://www.biorxiv.org/content/early/2024/12/10/2024.12.06.627166.full.pdf},
-	journal = {bioRxiv}
+	issn = {1367-4811},
+	url = {https://doi.org/10.1093/bioinformatics/btaf291},
+	doi = {10.1093/bioinformatics/btaf291},
+	abstract = {Pangenome variation graphs are an increasingly used tool to perform genome analysis, aiming to replace a linear reference in a wide variety of genomic analyses. The construction of a variation graph from a collection of chromosome-size genome sequences is a difficult task that is generally addressed using a number of heuristics. The question that arises is to what extent the construction method influences the resulting graph, and the characterization of variability.We aim to characterize the differences between variation graphs derived from the same set of genomes with a metric which expresses and pinpoint differences. We designed a pairwise variation graph comparison algorithm, which establishes an edit distance between variation graphs, threading the genomes through both graphs. We applied our method to pangenome graphs built from yeast and human chromosome collections, and demonstrate that our method effectively characterizes discordances between pangenome graph construction methods and scales to real datasets.pancat compare is published as free Rust software under the AGPL3.0 open source license. Source code and documentation are available at https://github.com/dubssieg/rs-pancat-compare. Snapshot available on Software Heritage at swh:1:dir:61acda8ba3dac1709ed60530147d3871831be629Supplementary data are available online at https://doi.org/10.5281/zenodo.10932489. Code to replicate figures and analysis is available online at https://github.com/dubssieg/pancat\_paper.},
+	urldate = {2025-05-14},
+	journal = {Bioinformatics},
+	author = {Dubois, Siegfried and Zytnicki, Matthias and Lemaitre, Claire and Faraut, Thomas},
+	month = may,
+	year = {2025},
+	pages = {btaf291},
 }
 ```
