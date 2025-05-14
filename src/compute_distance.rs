@@ -6,8 +6,8 @@ use std::io::{self, BufReader, Read, Seek, SeekFrom};
 pub fn distance(
     file_path1: &str,
     file_path2: &str,
-    node_sizes1: HashMap<String, usize>,
-    node_sizes2: HashMap<String, usize>,
+    node_sizes1: HashMap<String, u64>,
+    node_sizes2: HashMap<String, u64>,
     path_positions1: HashMap<String, u64>,
     path_positions2: HashMap<String, u64>,
     path_lengths1: HashMap<String, u64>,
@@ -80,17 +80,13 @@ pub fn distance(
         let mut node1: String = String::new();
         let mut node2: String = String::new();
 
-        let mut breakpoint_a: usize = 0;
-        let mut breakpoint_b: usize = 0;
+        let mut breakpoint_a: u64 = 0;
+        let mut breakpoint_b: u64 = 0;
 
-        let mut position: usize = 0;
+        let mut position: u64 = 0;
 
-        let max_length1: usize = path_lengths1[path_name.as_str()] as usize;
-        let max_length2: usize = path_lengths2[path_name.as_str()] as usize;
-
-        if path_types1[path_name.as_str()] == 'W' {
-            // It is a W-line, we need the read_next_w_node function
-        }
+        let max_length1: u64 = path_lengths1[path_name.as_str()] as u64;
+        let max_length2: u64 = path_lengths2[path_name.as_str()] as u64;
 
         if max_length1 != max_length2 {
             // The two paths have different lengths, we cannot compare them
