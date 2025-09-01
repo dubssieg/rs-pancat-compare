@@ -7,7 +7,7 @@ use clap::Parser;
 
 #[derive(Parser, Debug)]
 #[command(
-    version = "v0.1.3",
+    version = "v0.1.4",
     about = "GFA graph comparison tool",
     long_about = "Compares pangenome graphs by calculating the segmentation distance between two GFA (Graphical Fragment Assembly) files."
 )]
