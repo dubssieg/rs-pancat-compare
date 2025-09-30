@@ -35,7 +35,6 @@ pub fn index_gfa(
                 seq_lengths.insert(node_name, sequence_length as u64);
             }
             if first_char == 'W' {
-                path_types.insert(columns[1].to_string(), 'W');
                 // In the case of a W-line, we store the path name and the offset of the path description
                 // When processing paths, we can match paths in the path_positions HashMap
                 // Then start reading the file from there and go with a buffer to read node by node the path
@@ -44,23 +43,23 @@ pub fn index_gfa(
                 } else {
                     // Capitalize path name and remove trailing '#0'
                     (columns[1].to_string() + "#" + columns[2] + "#" + columns[3])
-                        .to_ascii_uppercase()
-                        .trim_end_matches("#0")
-                        .to_string()
+                    .to_ascii_uppercase()
+                    .trim_end_matches("#0")
+                    .to_string()
                 };
                 let offset = reader.seek(io::SeekFrom::Current(0))?
-                    - (line.len() as u64
-                        - columns[0].len() as u64
-                        - columns[1].len() as u64
-                        - columns[2].len() as u64
-                        - columns[3].len() as u64
-                        - columns[4].len() as u64
-                        - columns[5].len() as u64
-                        - 6);
+                - (line.len() as u64
+                - columns[0].len() as u64
+                - columns[1].len() as u64
+                - columns[2].len() as u64
+                - columns[3].len() as u64
+                - columns[4].len() as u64
+                - columns[5].len() as u64
+                - 6);
                 path_positions.insert(path_name.clone(), offset + 1);
+                path_types.insert(path_name.clone(), 'W');
             }
             if first_char == 'P' {
-                path_types.insert(columns[1].to_string(), 'P');
                 // In the case of a P-line, we store the path name and the offset of the path description
                 // When processing paths, we can match paths in the path_positions HashMap
                 // Then start reading the file from there and go with a buffer to read node by node the path
@@ -69,13 +68,14 @@ pub fn index_gfa(
                 } else {
                     // Capitalize path name and remove trailing '#0'
                     String::from(columns[1])
-                        .to_ascii_uppercase()
-                        .trim_end_matches("#0")
-                        .to_string()
+                    .to_ascii_uppercase()
+                    .trim_end_matches("#0")
+                    .to_string()
                 };
                 let offset = reader.seek(io::SeekFrom::Current(0))?
-                    - (line.len() as u64 - columns[0].len() as u64 - columns[1].len() as u64 - 2);
+                - (line.len() as u64 - columns[0].len() as u64 - columns[1].len() as u64 - 2);
                 path_positions.insert(path_name.clone(), offset);
+                path_types.insert(path_name.clone(), 'P');
             }
         }
         line.clear(); // Clear the line buffer for the next read
