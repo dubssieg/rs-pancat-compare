@@ -2,6 +2,7 @@ mod annotate_edit_lengths;
 mod compute_distance;
 mod evaluate_spuriousness;
 mod index_gfa_file;
+mod local_to_global;
 
 use clap::Parser;
 
@@ -25,9 +26,13 @@ struct Cli {
     /// Annotate editions with their lengths (on an already computed edit file)
     #[clap(long = "annot", short = 'a', action)]
     annotate: Option<String>,
+    /// Output new edit file with global breakpoints
+    #[clap(long = "global", short = 'g', action)]
+    global: Option<String>,
     /// Filter the paths to be annotated
     #[clap(long = "filter", short = 'f', action)]
     filter: Option<String>,
+
 }
 
 fn main() {
@@ -87,7 +92,6 @@ fn main() {
         spurious_nodes_a = Vec::new();
         spurious_nodes_b = Vec::new();
     }
-
     // If the annotate option is given, annotate the editions with their lengths
     if args.annotate.is_some() {
         // Create empty vector
@@ -118,8 +122,16 @@ fn main() {
             intersection,
         )
         .unwrap();
-    // Else, compute the distance between the two graphs
-    } else {
+    } // If the global option is given, reformulate editions to global dist
+    else if args.global.is_some() {
+        local_to_global::local_to_global(
+            &args.file_path_a,
+            &args.file_path_b,
+            args.global.as_deref().unwrap(),
+        )
+        .unwrap();
+    } // Else, compute the distance between the two graphs
+    else {
         compute_distance::distance(
             &args.file_path_a,
             &args.file_path_b,
