@@ -26,8 +26,8 @@ pub fn local_to_global(
         if let Some(first_char) = line.chars().next() {
             if first_char == 'L' {
                 // In the case of an L-line, we store the two node names and init an empty vec
-                let node_x_name = String::from(columns[1]);
-                let node_y_name = String::from(columns[3]);
+                let node_x_name = String::from(columns[1].to_owned()+columns[2]);
+                let node_y_name = String::from(columns[3].to_owned()+columns[4]);
                 edges_a_collection.insert([node_x_name,node_y_name], Vec::new());
             }
         }
@@ -45,8 +45,8 @@ pub fn local_to_global(
         if let Some(first_char) = line.chars().next() {
             if first_char == 'L' {
                 // In the case of an L-line, we store the two node names and init an empty vec
-                let node_x_name = String::from(columns[1]);
-                let node_y_name = String::from(columns[3]);
+                let node_x_name = String::from(columns[1].to_owned()+columns[2]);
+                let node_y_name = String::from(columns[3].to_owned()+columns[4]);
                 edges_b_collection.insert([node_x_name,node_y_name], Vec::new());
             }
         }
@@ -67,16 +67,20 @@ pub fn local_to_global(
                 let node_a = String::from(columns[3]);
                 let node_b = String::from(columns[4]);
                 if edit_type == "S" {
+                    let positive_node_a = node_a.clone() + "+";
+                    let negative_node_a = node_a.clone() + "-";
                     // We need to find all edges that uses the node_a as predecessor in edges_a_collection
-                    for ([x,_], vec) in edges_a_collection.iter_mut() {
-                        if node_a == *x {
+                    for ([x,y], vec) in edges_a_collection.iter_mut() {
+                        if positive_node_a == *x || negative_node_a == *y {
                             vec.push(path_name.clone());
                         }
                     }
                 } else if  edit_type == "M" {
+                    let positive_node_b = node_b.clone() + "+";
+                    let negative_node_b = node_b.clone() + "-";
                     // We need to find all edges that uses the node_b as predecessor in edges_b_collection
-                    for ([x,_], vec) in edges_b_collection.iter_mut() {
-                        if node_b == *x {
+                    for ([x,y], vec) in edges_b_collection.iter_mut() {
+                        if positive_node_b == *x || negative_node_b == *y {
                             vec.push(path_name.clone());
                         }
                     }
