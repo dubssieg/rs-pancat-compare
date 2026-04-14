@@ -91,6 +91,14 @@ Output features:
 + `NodeA` (resp. `NodeB`) is the node on pathA (resp. pathB) where the edition occurs
 + `BreakpointA` (resp. `BreakpointB`) is the next breakpoint position on pathA (resp. pathB)
 
+## Transform local in global breakpoints
+
+Post-processing step to transform local breakpoints (listed by path) to global breakpoints (projected onto a graph and accounted only once).
+
+```bash
+rs-pancat-compare example/graph_A.gfa example/graph_B.gfa -g output.tsv > output_global.tsv
+```
+
 ## Test datasets
 
 You can find datasets used for the paper [on Zenodo](https://zenodo.org/records/10932490) and instructions on how to use [on the dedicated repository](https://github.com/dubssieg/pancat_paper).
