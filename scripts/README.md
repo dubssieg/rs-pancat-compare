@@ -9,3 +9,5 @@ Example: view between positions 0 and 200 according to path CASBJU01 and output 
 ```bash
 python visualisation.py mc_yeast_1.gfa pggb_yeast_1.gfa yeast_local.tsv output.html CASBJU01 0 200
 ```
+
+![view edits](https://github.com/dubssieg/dubssieg/blob/main/view_distance.png)
